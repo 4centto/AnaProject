@@ -1,0 +1,20 @@
+CREATE DATABASE Tienda;
+USE Tienda;
+
+CREATE TABLE PRODUCTO (
+	codigo VARCHAR(20) NOT NULL UNIQUE,
+    nombre_producto VARCHAR(50) NOT NULL,
+    existencias_producto INT(8) NOT NULL,
+    precio_venta_producto DECIMAL(5,2) NOT NULL,
+    costo_producto DECIMAL(5, 2) NOT NULL,
+    PRIMARY KEY(codigo)
+);
+
+DROP TABLE PRODUCTO;
+
+SELECT * FROM PRODUCTO;
+SELECT * FROM PRODUCTO ORDER BY codigo;
+DELETE FROM PRODUCTO;
+SELECT COUNT(*) AS productos FROM PRODUCTO;
+
+UPDATE PRODUCTO SET nombre_producto = "";
