@@ -12,6 +12,7 @@ import javax.swing.table.DefaultTableModel;
 public class Remisiones extends javax.swing.JFrame {
     
     private ArrayList<Cotizacion> cotizaciones = null;
+    public static int ID_COTIZACION;
     
     public Remisiones() {
         initComponents();
@@ -56,7 +57,11 @@ public class Remisiones extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jTableCotizaciones.setEnabled(false);
+        jTableCotizaciones.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTableCotizacionesMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTableCotizaciones);
 
         getContentPane().add(jScrollPane1);
@@ -64,6 +69,16 @@ public class Remisiones extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    //Metodo para cuando el usuario seleccione una cotizacion
+    private void jTableCotizacionesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableCotizacionesMouseClicked
+        int index = jTableCotizaciones.getSelectedRow();
+        ID_COTIZACION = cotizaciones.get(index).getId();
+        
+        InfoRemision ir = new InfoRemision();
+        ir.setVisible(true);
+        
+    }//GEN-LAST:event_jTableCotizacionesMouseClicked
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
