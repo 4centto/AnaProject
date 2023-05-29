@@ -58,5 +58,12 @@ public class ProductoTicket {
     public void setPrecio(float precio) {
         this.precio = precio;
     }
+
+    @Override
+    public String toString() {
+        return "ProductoTicket{" + "id=" + id + ", cantidad=" + cantidad + ", producto=" + producto + ", precio=" + precio + ", total=" + total + '}';
+    }
+    
+    
     
 }

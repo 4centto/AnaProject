@@ -284,4 +284,51 @@ public class Conexion {
         return null;
     }
     
+    //Metodo que agrega las cotizaciones
+    public static boolean updateCotizacion(ArrayList<ProductoTicket> productos, float descuento, String fecha, String hora, int id){
+        String codigos = "", products = "", cantidades = "", precios = "", totales = "";
+        
+        for(ProductoTicket p : productos){
+            if(products.compareTo("") == 0){
+                codigos = p.getId();
+                products = p.getProducto();
+                cantidades = String.valueOf(p.getCantidad());
+                precios = String.valueOf(p.getPrecio());
+                totales = String.valueOf(p.getTotal());
+            } else {
+                codigos += "@~@" + p.getId();
+                products += "@~@" + p.getProducto();
+                cantidades += "@~@" + String.valueOf(p.getCantidad());
+                precios += "@~@" + String.valueOf(p.getPrecio());
+                totales += "@~@" + String.valueOf(p.getTotal());
+            }
+        }
+        
+        try {
+            PreparedStatement ps = conn.prepareStatement("UPDATE COTIZACIONES SET fecha = ?, hora = ?, codigos = ?, productos = ?, cantidades = ?, precios = ?, totales = ?, descuento = ? " + 
+                "WHERE id = ?");
+            ps.setString(1, fecha);
+            ps.setString(2, hora);
+            ps.setString(3, codigos);
+            ps.setString(4, products);
+            ps.setString(5, cantidades);
+            ps.setString(6, precios);
+            ps.setString(7, totales);
+            ps.setFloat(8, descuento);
+            ps.setInt(9, id);
+            
+            ps.executeUpdate();
+            
+            JOptionPane.showMessageDialog(null, "Cotizacion actualizada con exito!", "Cotizacion actualizada", JOptionPane.INFORMATION_MESSAGE);
+            
+            return true;
+            
+        } catch(SQLException e){
+            System.out.println(e.toString());
+            JOptionPane.showMessageDialog(null, "Error de conexion", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        return false;
+        
+    }
+    
 }

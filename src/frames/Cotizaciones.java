@@ -29,7 +29,7 @@ public class Cotizaciones extends javax.swing.JFrame {
             + "<p></p>";
     private String ticketTable = "";
 
-    private ArrayList<ProductoTicket> productosTicket = new ArrayList<>();
+    public static ArrayList<ProductoTicket> productosTicket = new ArrayList<>();
     private String id = "";
     private float precio = 0;
     private float descuento = 0;
@@ -176,7 +176,10 @@ public class Cotizaciones extends javax.swing.JFrame {
     //Boton para quitar un producto de la lista
     private void jButtonQuitarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonQuitarActionPerformed
         if (!productosTicket.isEmpty()) {
-            productosTicket.remove(productosTicket.size() - 1);
+            
+            RemovedProduct rp = new RemovedProduct();
+            rp.setVisible(true);
+            
             actualizarTicket();
         } else {
             JOptionPane.showMessageDialog(null, "No hay productos en la lista", "Lista vacia", JOptionPane.WARNING_MESSAGE);
@@ -231,7 +234,7 @@ public class Cotizaciones extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextFieldDescuentoKeyPressed
 
     //Metodo que actualiza el ticket cada vez que se hace un cambio
-    private void actualizarTicket() {
+    public void actualizarTicket() {
         if (jTextFieldDescuento.getText().compareTo("") == 0) {
             JOptionPane.showMessageDialog(null, "Debes ingresar un descuento", "DESCUENTO INVALIDO", JOptionPane.WARNING_MESSAGE);
         } else {
