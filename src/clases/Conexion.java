@@ -252,4 +252,36 @@ public class Conexion {
         return null;
     }
     
+    public Cotizacion getCotizacion(int id){
+        try {
+            st = conn.createStatement();
+            rs = st.executeQuery("SELECT * FROM COTIZACIONES WHERE id = '" + id  + "'");
+            
+            if(rs != null){
+                while(rs.next()){
+                    Cotizacion c = new Cotizacion(
+                            rs.getInt("id"), 
+                            rs.getString("fecha"), 
+                            rs.getString("hora"), 
+                            rs.getString("codigos"), 
+                            rs.getString("productos"), 
+                            rs.getString("cantidades"), 
+                            rs.getString("precios"), 
+                            rs.getString("totales"), 
+                            rs.getFloat("descuento")
+                    );
+                    
+                    return c;
+                }
+            }
+            
+            return null;
+            
+        } catch(SQLException e){
+            System.out.println(e.toString());
+        }
+        
+        return null;
+    }
+    
 }

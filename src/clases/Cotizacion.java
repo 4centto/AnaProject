@@ -97,6 +97,10 @@ public class Cotizacion {
     public void setTotales(String totales) {
         this.totales = totales;
     }
-    
+
+    @Override
+    public String toString() {
+        return "Cotizacion{" + "id=" + id + ", fecha=" + fecha + ", hora=" + hora + ", codigos=" + codigos + ", productos=" + productos + ", cantidades=" + cantidades + ", precios=" + precios + ", totales=" + totales + ", descuento=" + descuento + '}';
+    }
     
 }

@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import javax.swing.WindowConstants;
 
 import clases.Cotizacion;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 
 public class Remisiones extends javax.swing.JFrame {
