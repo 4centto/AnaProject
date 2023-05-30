@@ -17,22 +17,21 @@ public class Cotizaciones extends javax.swing.JFrame {
     private DefaultComboBoxModel model = new DefaultComboBoxModel();
 
     //Varioables para el ticket
-    
     private String fecha = "";
     private String horaB = "";
     
-    private String ticket = "";
-    private String ticketHeader = "<p style='text-align: center;'>Distribuidora Mundo Hogar</p>"
+    private static String ticket = "";
+    private final String ticketHeader = "<p style='text-align: center;'>Distribuidora Mundo Hogar</p>"
             + "<p></p>"
             + "<p style='text-align: center;'>" + formatDate() + "</p>"
             + "<p></p>"
             + "<p></p>";
-    private String ticketTable = "";
+    private static String ticketTable = "";
 
     public static ArrayList<ProductoTicket> productosTicket = new ArrayList<>();
     private String id = "";
     private float precio = 0;
-    private float descuento = 0;
+    public static float descuento = 0;
     private float total = 0;
     private float subtotal = 0;
 
@@ -50,6 +49,30 @@ public class Cotizaciones extends javax.swing.JFrame {
 
         fillCombo();
         initTicket();
+
+    }
+    
+    public Cotizaciones(ArrayList<ProductoTicket> pt, float d) {
+        initComponents();
+
+        this.setTitle("Cotizaciones");
+        this.setResizable(false);
+        this.setLocationRelativeTo(null);
+        this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        this.setSize(1000, 530);
+
+        Conexion cn = new Conexion();
+        productos = cn.getProducts();
+        
+        fillCombo();
+        initTicket();
+        
+        productosTicket = pt;
+        descuento = d;
+        
+        jTextFieldDescuento.setText(String.valueOf(descuento));
+        
+        actualizarTicket();
 
     }
 
@@ -177,6 +200,7 @@ public class Cotizaciones extends javax.swing.JFrame {
     private void jButtonQuitarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonQuitarActionPerformed
         if (!productosTicket.isEmpty()) {
             
+            this.dispose();
             RemovedProduct rp = new RemovedProduct();
             rp.setVisible(true);
             
