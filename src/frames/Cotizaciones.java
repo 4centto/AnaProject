@@ -216,6 +216,7 @@ public class Cotizaciones extends javax.swing.JFrame {
             if(JOptionPane.showConfirmDialog(null, "¿Deseas generar una nueva cotizacion?", "Generar cotizacion", JOptionPane.YES_NO_OPTION) == 0){
                 //Añadimos la cotizacion a la base de datos
                 if(Conexion.addCotizacion(productosTicket, descuento, fecha, horaB)){
+                    productos.removeAll(productos);
                     imprimirTicket();
                     this.dispose();
                 } else {
@@ -383,7 +384,7 @@ public class Cotizaciones extends javax.swing.JFrame {
     //Metodo que nos obtiene todos los productos de la base de datos
     private void fillCombo() {
         for (int i = 0; i < productos.size(); i++) {
-            model.addElement(productos.get(i).getNombre());
+            model.addElement(productos.get(i));
         }
         jComboBoxProductos.setModel(model);
     }

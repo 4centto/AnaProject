@@ -13,7 +13,11 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -36,6 +40,7 @@ public class Inventario extends javax.swing.JFrame {
 
         fillTable();
         jTableProductosSearch.setModel(new DefaultTableModel());
+        
     }
 
     @SuppressWarnings("unchecked")
@@ -81,7 +86,6 @@ public class Inventario extends javax.swing.JFrame {
             }
         ));
         jTableProductos.setCellSelectionEnabled(true);
-        jTableProductos.setEnabled(false);
         jScrollPane1.setViewportView(jTableProductos);
 
         getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 110, 670, 220));
@@ -111,7 +115,6 @@ public class Inventario extends javax.swing.JFrame {
             }
         ));
         jTableProductosSearch.setCellSelectionEnabled(true);
-        jTableProductosSearch.setEnabled(false);
         jScrollPane2.setViewportView(jTableProductosSearch);
 
         getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 390, 670, 180));
@@ -198,7 +201,6 @@ public class Inventario extends javax.swing.JFrame {
         jLabel11.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 14)); // NOI18N
         jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel11.setText("ABRIR DOCUMENTO");
-        jLabel11.setSize(new java.awt.Dimension(50, 20));
         jPanel4.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 26, -1, -1));
 
         getContentPane().add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 300, 70));
@@ -225,8 +227,9 @@ public class Inventario extends javax.swing.JFrame {
 
                     Pattern patron = Pattern.compile(palabra);
                     Matcher m = patron.matcher(productos.get(j).getNombre().toLowerCase().strip());
+                    Matcher m2 = patron.matcher(productos.get(j).getCodigo().toLowerCase().strip());
 
-                    if (m.find()) {
+                    if (m.find() || m2.find()) {
                         pb.add(productos.get(j));
                     }
 
@@ -266,10 +269,41 @@ public class Inventario extends javax.swing.JFrame {
 
     //boton actualizar inventario
     private void jPanel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel2MouseClicked
-        ActualizarInventario ai = new ActualizarInventario();
-        ai.setVisible(true);
+        TableModel table = jTableProductos.getModel();
+        
+        try{
+            for(int i = 0; i < table.getRowCount(); i++){
+                int cant = 0;
+                float precio = 0.0f, costo = 0.0f;
+                
+                //Verificamos si el campo de la cantidad esta vacio
+                if(table.getValueAt(i, 2).toString().trim().compareTo("") != 0){
+                    cant = Integer.parseInt(table.getValueAt(i, 2).toString().trim());
+                } 
+                
+                if(table.getValueAt(i, 3).toString().trim().compareTo("") != 0){
+                    costo = Float.parseFloat(table.getValueAt(i, 3).toString().trim());
+                }
+                
+                if(table.getValueAt(i, 4).toString().trim().compareTo("") != 0){
+                    precio = Float.parseFloat(table.getValueAt(i, 4).toString().trim());
+                }
+                
+                productos.get(i).setExistencia(cant);
+                productos.get(i).setCosto(costo);
+                productos.get(i).setPrecioVenta(precio);
+            }
+            
+            Conexion.updateProducts(productos);
+            
+            Conexion conexion = new Conexion();
+            productos = conexion.getProducts();
 
-        this.dispose();
+            fillTable();
+            
+        } catch(NumberFormatException e){
+            JOptionPane.showMessageDialog(null, "Verifica que las existencias, precios y costos esten escritos correctamente", "ERROR DE CONVERSION", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_jPanel2MouseClicked
 
     //Boton eliminar producto
@@ -332,8 +366,8 @@ public class Inventario extends javax.swing.JFrame {
         model.addColumn("Codigo");
         model.addColumn("Producto");
         model.addColumn("Existencias/Piezas");
-        model.addColumn("PrecioVenta/Pieza");
         model.addColumn("Costo");
+        model.addColumn("PrecioVenta/Pieza");
 
         for (int i = 0; i < productos.size(); i++) {
             Object[] object = new Object[5];

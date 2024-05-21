@@ -92,7 +92,6 @@ public class RemovedProduct extends javax.swing.JFrame {
         c.setVisible(true);
         
         this.dispose();
-        
     }//GEN-LAST:event_jButton1ActionPerformed
 
     //Funcion para cancelar el movimiento

@@ -6,6 +6,7 @@ import clases.Cotizacion;
 import clases.Producto;
 import clases.ProductoTicket;
 import java.util.ArrayList;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
@@ -15,7 +16,8 @@ public class InfoRemision extends javax.swing.JFrame {
     
     private int ID_COTIZACION = Remisiones.ID_COTIZACION;
     private Cotizacion cotizacion = null;
-    ArrayList<ProductoTicket> productos = null;
+    private ArrayList<ProductoTicket> productos = null;
+    private ArrayList<Producto> prods = null;
 
     public InfoRemision() {
         initComponents();
@@ -24,16 +26,19 @@ public class InfoRemision extends javax.swing.JFrame {
         this.setResizable(false);
         this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         this.setTitle("Informacion de la remision");
-        this.setSize(600, 500);
+        this.setSize(600, 650);
         
         Conexion c = new Conexion();
-        cotizacion = c.getCotizacion(ID_COTIZACION);
+        
+        cotizacion = c.getCotizacion(ID_COTIZACION); //Obtenemos los datos de la cotizacion
+        prods = c.getProducts(); //Obtenemos todos los productos de la base de datos
         
         jLabel1.setText(cotizacion.getFecha());
         jTextField1.setText(String.valueOf(cotizacion.getDescuento()));
         
         formatData();
         fillTable();
+        fillSelects();
         calculateTotal();
         
     }
@@ -49,6 +54,14 @@ public class InfoRemision extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        jPanel1 = new javax.swing.JPanel();
+        jComboBox1 = new javax.swing.JComboBox<>();
+        jButton3 = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
+        jComboBox2 = new javax.swing.JComboBox<>();
+        jButton4 = new javax.swing.JButton();
+        jButton5 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(null);
@@ -80,16 +93,22 @@ public class InfoRemision extends javax.swing.JFrame {
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel2.setText("DESCUENTO (%)");
         getContentPane().add(jLabel2);
-        jLabel2.setBounds(220, 340, 200, 20);
+        jLabel2.setBounds(310, 350, 150, 20);
+
+        jTextField1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jTextField1KeyPressed(evt);
+            }
+        });
         getContentPane().add(jTextField1);
-        jTextField1.setBounds(431, 340, 140, 25);
+        jTextField1.setBounds(470, 350, 100, 25);
 
         jLabel3.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 14)); // NOI18N
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel3.setText("jLabel3");
+        jLabel3.setText("Total ");
         jLabel3.setVerticalAlignment(javax.swing.SwingConstants.TOP);
         getContentPane().add(jLabel3);
-        jLabel3.setBounds(320, 370, 250, 30);
+        jLabel3.setBounds(320, 380, 250, 30);
 
         jButton1.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 14)); // NOI18N
         jButton1.setText("ACTUALIZAR");
@@ -99,12 +118,59 @@ public class InfoRemision extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jButton1);
-        jButton1.setBounds(370, 410, 200, 50);
+        jButton1.setBounds(350, 450, 200, 50);
 
         jButton2.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 14)); // NOI18N
         jButton2.setText("IMPRIMIR TICKET");
         getContentPane().add(jButton2);
-        jButton2.setBounds(160, 410, 200, 50);
+        jButton2.setBounds(80, 530, 200, 50);
+
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jComboBox1.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 14)); // NOI18N
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jPanel1.add(jComboBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 260, 50));
+
+        jButton3.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 14)); // NOI18N
+        jButton3.setText("AGREGAR");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(135, 80, 140, 50));
+
+        jTabbedPane1.addTab("AGREGAR PRODUCTO", jPanel1);
+
+        jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jComboBox2.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 14)); // NOI18N
+        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jPanel2.add(jComboBox2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 260, 50));
+
+        jButton4.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 14)); // NOI18N
+        jButton4.setText("QUITAR");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+        jPanel2.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(135, 80, 140, 50));
+
+        jTabbedPane1.addTab("QUITAR PRODUCTO", jPanel2);
+
+        getContentPane().add(jTabbedPane1);
+        jTabbedPane1.setBounds(10, 340, 300, 200);
+
+        jButton5.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 14)); // NOI18N
+        jButton5.setText("CREAR REMISION");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jButton5);
+        jButton5.setBounds(350, 530, 200, 50);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -148,6 +214,59 @@ public class InfoRemision extends javax.swing.JFrame {
         }
         
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    //Funcion para agragr un nuevo producto a la lista de la cotizacion
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        Producto p = (Producto)jComboBox1.getSelectedItem();
+        
+        //Verficamos que el producto no exista en la lista de la cotizacion
+        int cont = 0;
+        for(int i = 0; i < productos.size(); i++){
+            if(p.getNombre().compareToIgnoreCase(productos.get(i).getProducto()) == 0){
+                cont ++;
+            }
+        }
+        
+        if(cont > 0){
+            JOptionPane.showMessageDialog(null, "El producto ya esta en la lista", "Producto repetido", JOptionPane.WARNING_MESSAGE);
+        } else {
+            productos.add(new ProductoTicket(p.getCodigo(), 0, p.getNombre(), p.getPrecioVenta(), 0.0f));
+            
+            fillTable();
+            calculateTotal();
+        }
+        
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    //Funcion para remover el producto de la lista
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        ProductoTicket p = (ProductoTicket)jComboBox2.getSelectedItem();
+        
+        for(int i = 0; i < productos.size(); i++){
+            if(productos.get(i).getId().compareToIgnoreCase(p.getId()) == 0){
+                productos.remove(i);
+            }
+        }
+        
+        fillTable();
+        calculateTotal();
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    //Funcion que al presionar entre en el input actualiza los datos
+    private void jTextField1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyPressed
+        if(evt.getKeyCode() == 10){
+            if(jTextField1.getText().compareTo("") == 0){
+                jTextField1.setText("0");
+            } 
+            fillTable();
+            calculateTotal(); 
+        }
+    }//GEN-LAST:event_jTextField1KeyPressed
+
+    //Metodo para crear la remision y actualizar el inventario
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        
+    }//GEN-LAST:event_jButton5ActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -241,13 +360,38 @@ public class InfoRemision extends javax.swing.JFrame {
         
     }
     
+    //Funcion que llena el Combo Box
+    private void fillSelects(){
+        DefaultComboBoxModel model = null;
+        
+        model = new DefaultComboBoxModel();
+        for(int i = 0; i < prods.size(); i++){
+            model.addElement(prods.get(i));
+        }
+        jComboBox1.setModel(model);
+        
+        model = new DefaultComboBoxModel();
+        for(int i = 0; i < productos.size(); i++){
+            model.addElement(productos.get(i));
+        }
+        jComboBox2.setModel(model);
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
+    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables

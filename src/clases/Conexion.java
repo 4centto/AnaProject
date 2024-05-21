@@ -191,12 +191,16 @@ public class Conexion {
                 cantidades = String.valueOf(p.getCantidad());
                 precios = String.valueOf(p.getPrecio());
                 totales = String.valueOf(p.getTotal());
+                
+                updateExistances(p.getId(), p.getCantidad() * -1);
             } else {
                 codigos += "@~@" + p.getId();
                 products += "@~@" + p.getProducto();
                 cantidades += "@~@" + String.valueOf(p.getCantidad());
                 precios += "@~@" + String.valueOf(p.getPrecio());
                 totales += "@~@" + String.valueOf(p.getTotal());
+                
+                updateExistances(p.getId(), p.getCantidad() * -1);
             }
         }
         
@@ -226,6 +230,25 @@ public class Conexion {
         
     }
     
+    //Funcion que actualiza las existencias
+    private static void updateExistances(String codigo, int cantidad){
+        
+        System.out.println(cantidad);
+        
+        try {
+            PreparedStatement ps = conn.prepareStatement("UPDATE PRODUCTO SET existencias_producto = existencias_producto  + " + cantidad + " WHERE codigo = ?");
+            
+            ps.setString(1, codigo);
+            
+            ps.executeUpdate();
+            
+        } catch(SQLException e){
+            System.out.println(e.toString());
+            JOptionPane.showMessageDialog(null, "Error de conexion", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    //Funcion para obtener todas las cotizaciones
     public ArrayList<Cotizacion> getCotizaciones(){
         try {
             st = conn.createStatement();
@@ -252,6 +275,34 @@ public class Conexion {
         return null;
     }
     
+    //Funcion para obtener todas las devoluciones
+    public ArrayList<Devolucion> getDevoluciones(){
+        try {
+            st = conn.createStatement();
+            rs = st.executeQuery("SELECT * FROM devoluciones ORDER BY id DESC");
+            
+            ArrayList<Devolucion> devoluciones = new ArrayList<>();
+            
+            if(rs != null){
+                while(rs.next()){
+                    Devolucion c = new Devolucion(rs.getInt("id"), rs.getString("fecha"), 
+                            rs.getString("hora"), rs.getString("codigos"), rs.getString("productos"), 
+                            rs.getString("cantidades"), rs.getString("precios"), rs.getString("totales")
+                    );
+                    
+                    devoluciones.add(c);
+                }
+                return devoluciones;
+            }
+            
+        } catch(SQLException e){
+            System.out.println(e.toString());
+        }
+        
+        return null;
+    }
+    
+    //Funcion que obtiene una cotizacion especifica
     public Cotizacion getCotizacion(int id){
         try {
             st = conn.createStatement();
@@ -331,4 +382,57 @@ public class Conexion {
         
     }
     
+    //Metodo que agrega las devoluciones
+    public static boolean addDevolucion(ArrayList<ProductoTicket> productos, String fecha, String hora){
+        String codigos = "", products = "", cantidades = "", precios = "", totales = "";
+        int cant = 0;
+        
+        for(ProductoTicket p : productos){
+            if(p.getCantidad() > 0){
+                if(products.compareTo("") == 0){
+                    codigos = p.getId();
+                    products = p.getProducto();
+                    cantidades = String.valueOf(p.getCantidad());
+                    precios = String.valueOf(p.getPrecio());
+                    totales = String.valueOf(p.getTotal());
+                    cant ++;
+                } else {
+                    codigos += "@~@" + p.getId();
+                    products += "@~@" + p.getProducto();
+                    cantidades += "@~@" + String.valueOf(p.getCantidad());
+                    precios += "@~@" + String.valueOf(p.getPrecio());
+                    totales += "@~@" + String.valueOf(p.getTotal());
+                    cant ++;
+                }   
+            }
+        }
+        
+        if(cant > 0){
+            try {
+                PreparedStatement ps = conn.prepareStatement("INSERT INTO DEVOLUCIONES VALUES(?, ?, ?, ?, ?, ?, ?, ?)");
+                ps.setInt(1, 0);
+                ps.setString(2, fecha);
+                ps.setString(3, hora);
+                ps.setString(4, codigos);
+                ps.setString(5, products);
+                ps.setString(6, cantidades);
+                ps.setString(7, precios);
+                ps.setString(8, totales);
+
+                ps.executeUpdate();
+
+                JOptionPane.showMessageDialog(null, "Devolucion generada con exito!", "Devolucion creada", JOptionPane.INFORMATION_MESSAGE);
+
+                return true;
+
+            } catch(SQLException e){
+                System.out.println(e.toString());
+                JOptionPane.showMessageDialog(null, "Error de conexion", "Error", JOptionPane.ERROR_MESSAGE);
+            }   
+        } else {
+            JOptionPane.showMessageDialog(null, "No hay productos para devolver", "Devolucion fallida", JOptionPane.WARNING_MESSAGE);
+        }
+        return false;
+        
+    }
 }

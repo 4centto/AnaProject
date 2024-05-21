@@ -61,7 +61,7 @@ public class Producto {
     
     @Override
     public String toString() {
-        return "ID: " + this.codigo + " Producto: " + this.nombre + ", Existencias: " + this.existencia + ", Precio: " + this.precioVenta + ", Costo ultimo: " + this.costo;
+        return this.nombre;
     }
     
 }

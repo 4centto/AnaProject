@@ -140,6 +140,9 @@ public class Menu extends javax.swing.JFrame {
         BtnDevoluciones.setFocusable(false);
         BtnDevoluciones.setPreferredSize(new java.awt.Dimension(420, 120));
         BtnDevoluciones.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                BtnDevolucionesMouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 BtnDevolucionesMouseEntered(evt);
             }
@@ -152,7 +155,7 @@ public class Menu extends javax.swing.JFrame {
         jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/devolucion.png"))); // NOI18N
         BtnDevoluciones.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
 
-        jLabel9.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 24)); // NOI18N
+        jLabel9.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 18)); // NOI18N
         jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel9.setText("DEVOLUCIONES");
         jLabel9.setPreferredSize(new java.awt.Dimension(200, 30));
@@ -213,6 +216,12 @@ public class Menu extends javax.swing.JFrame {
         Remisiones re = new Remisiones();
         re.setVisible(true);
     }//GEN-LAST:event_BtnRemisionesMouseClicked
+
+    //Boton para las devoluciones
+    private void BtnDevolucionesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_BtnDevolucionesMouseClicked
+        Devoluciones d = new Devoluciones();
+        d.setVisible(true);
+    }//GEN-LAST:event_BtnDevolucionesMouseClicked
         
     //Metodos para los hovers de los botones del menu
     private void hovered(Component component){

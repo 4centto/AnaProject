@@ -61,7 +61,7 @@ public class ProductoTicket {
 
     @Override
     public String toString() {
-        return "ProductoTicket{" + "id=" + id + ", cantidad=" + cantidad + ", producto=" + producto + ", precio=" + precio + ", total=" + total + '}';
+        return this.producto;
     }
     
     
